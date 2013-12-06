@@ -35,43 +35,19 @@ describe "打率の計算" do
     it { expect(subject).to eq("1.000") }
   end
 
-  context "2打席2打数1安打の場合" do
-    let(:appearance) { 2 }
-    let(:bat) { 2 }
-    let(:hit) { 1 }
+  [
+    { appearance: 2, bat: 2, hit: 1, expected: "0.500" },
+    { appearance: 4, bat: 3, hit: 1, expected: "0.333" },
+    { appearance: 4, bat: 4, hit: 1, expected: "0.250" },
+    { appearance: 15000, bat: 10000, hit: 1666, expected: "0.167" },
+    { appearance: 15000, bat: 10000, hit: 1663, expected: "0.166" },
+  ].each do |d|
+    context "#{d[:appearance]}打席#{d[:bat]}打数#{d[:hit]}安打の場合" do
+      let(:appearance) { d[:appearance] }
+      let(:bat) { d[:bat] }
+      let(:hit) { d[:hit] }
 
-    it { expect(subject).to eq("0.500") }
-  end
-
-  context "4打席3打数1安打の場合" do
-    let(:appearance) { 4 }
-    let(:bat) { 3 }
-    let(:hit) { 1 }
-
-    it { expect(subject).to eq("0.333") }
-  end
-
-  context "4打席4打数1安打の場合" do
-    let(:appearance) { 4 }
-    let(:bat) { 4 }
-    let(:hit) { 1 }
-
-    it { expect(subject).to eq("0.250") }
-  end
-
-  context "15000打席10000打数1666安打の場合" do
-    let(:appearance) { 15000 }
-    let(:bat) { 10000 }
-    let(:hit) { 1666 }
-
-    it { expect(subject).to eq("0.167") }
-  end
-
-  context "15000打席10000打数1663安打の場合" do
-    let(:appearance) { 15000 }
-    let(:bat) { 10000 }
-    let(:hit) { 1663 }
-
-    it { expect(subject).to eq("0.166") }
+      it { expect(subject).to eq(d[:expected]) }
+    end
   end
 end
