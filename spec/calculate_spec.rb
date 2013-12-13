@@ -1,9 +1,8 @@
 require 'spec_helper'
-require 'batting_average'
 
 describe "打率の計算" do
   subject do
-    BattingAverage.calculate(
+    BattingAverage.new(
       appearance: appearance,
       bat: bat,
       hit: hit
