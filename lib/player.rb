@@ -6,8 +6,8 @@ class Player
     @batting_average = nil
   end
 
-  def score_batting_average(appearance: appearance, bat: bat, hit: hit)
-    @batting_average = BattingAverage.new(appearance: appearance, bat: bat, hit: hit)
+  def score_batting(record)
+    @batting_average = BattingAverage.calculate(record)
     self
   end
 end

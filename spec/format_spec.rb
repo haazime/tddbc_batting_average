@@ -2,11 +2,13 @@ require 'spec_helper'
 
 describe "打率の整形" do
   subject do
-    BattingAverage.format(
-      appearance: appearance,
-      bat: bat,
-      hit: hit
-    )
+    BattingAverage
+      .calculate(
+        appearance: appearance,
+        bat: bat,
+        hit: hit
+      )
+      .to_s
   end
 
   let(:appearance) { nil }
