@@ -1,38 +1,82 @@
-class BattingAverage
-  include Comparable
-
+module BattingAverage
   class << self
 
-    def calculate(appearance: nil, bat: nil, hit: nil)
-      return new(-1) if appearance == 0
-      return new(0) if bat == 0
-      new(hit.to_f / bat.to_f)
+    def calculate(score)
+      return Nil.new(score) if score[:appearance] == 0
+      return Standard.new(0, score) if score[:bat] == 0
+      create_by_average(score[:hit].to_f / score[:bat].to_f, score)
     end
 
     def from_s(string)
-      new(string.to_f)
+      create_by_average(string.to_f, nil)
+    end
+
+  private
+
+    def create_by_average(average, score)
+      if average == 1.0
+        Full.new(score)
+      else
+        Standard.new(average, score)
+      end
     end
   end
 
-  def initialize(value)
-    @value = value
+  class Base
+    include Comparable
+
+    def initialize(value, score=nil)
+      @value = value
+      @score = score
+    end
+
+    def appearance
+      @score[:appearance]
+    end
+
+    def nil?
+      false
+    end
+
+    def value_with_digit(digit=3)
+      "%.#{digit}f" % @value
+    end
+
+    def <=>(other)
+      - (self.value_with_digit <=> other.value_with_digit)
+    end
   end
 
-  def nil?
-    @value == -1
+  class Nil < Base
+
+    def initialize(score)
+      super(-1, score)
+    end
+
+    def nil?
+      true
+    end
+
+    def to_s
+      '----'
+    end
   end
 
-  def value_with_digit(digit=3)
-    "%.#{digit}f" % @value
+  class Full < Base
+
+    def initialize(score)
+      super(1.0, score)
+    end
+
+    def to_s
+      '1.00'
+    end
   end
 
-  def to_s
-    return '----' if nil?
-    return '1.00' if @value >= 1.0
-    value_with_digit.sub(/^0/, '')
-  end
+  class Standard < Base
 
-  def <=>(other)
-    - (self.value_with_digit <=> other.value_with_digit)
+    def to_s
+      value_with_digit.sub(/^0/, '')
+    end
   end
 end

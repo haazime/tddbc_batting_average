@@ -23,7 +23,7 @@ describe "打率の計算" do
     let(:appearance) { 8 }
     let(:bat) { 0 }
 
-    it { expect(subject).to eq(BattingAverage.from_s("0.000")) }
+    it { expect(subject).to eq(BattingAverage.from_s(".000")) }
   end
 
   context "1打席1打数1安打の場合" do
@@ -31,7 +31,7 @@ describe "打率の計算" do
     let(:bat) { 1 }
     let(:hit) { 1 }
 
-    it { expect(subject).to eq(BattingAverage.from_s("1.000")) }
+    it { expect(subject).to eq(BattingAverage.from_s("1.00")) }
   end
 
   [
