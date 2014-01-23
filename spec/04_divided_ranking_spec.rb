@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe "規定打席数消化別打率ランキング" do
   subject do
-    BattingAverageRanking.create_with_appearance_status(players, team_games)
+    BattingAverageRanking
+      .create_with_appearance_status(players, team_games)
   end
 
   let(:team_games) do

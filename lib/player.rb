@@ -1,10 +1,10 @@
 class Player
-  attr_reader :batting_average, :current_team
+  attr_reader :batting_average, :team
   attr_writer :batting_score
 
   def initialize(name, team=nil)
     @name = name
-    @current_team = team
+    @team = team
     @batting_score = { appearance: 0 }
   end
 

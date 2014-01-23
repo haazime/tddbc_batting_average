@@ -1,14 +1,32 @@
-class BattingAverageRanking
+require 'player_ranking'
+
+module BattingAverageRanking
+  class RankPolicy
+
+    def initialize(team_games)
+      @team_games = team_games
+    end
+
+    def satisfied_by?(player)
+      player.batting_appearance >= rankable_batting_appearance(player.team)
+    end
+
+  private
+
+    def rankable_batting_appearance(team)
+      (@team_games[team] * 3.1).round
+    end
+  end
 
   class << self
 
     def create(players)
       return nil if players.empty?
-      new(players.sort_by(&:batting_average))
+      PlayerRanking.new(players.sort_by(&:batting_average))
     end
 
     def create_with_appearance_status(players, team_games)
-      official, unofficial = partition_players_by_rankable(players, team_games)
+      official, unofficial = partition_players_by_policy(players, team_games)
       {
         official: create(official),
         unofficial: create(unofficial)
@@ -17,26 +35,9 @@ class BattingAverageRanking
 
   private
 
-    def partition_players_by_rankable(players, team_games)
-      players.partition do |player|
-        rankable_player?(player.batting_appearance, team_games[player.current_team])
-      end
+    def partition_players_by_policy(players, team_games)
+      policy = RankPolicy.new(team_games)
+      players.partition {|player| policy.satisfied_by?(player) }
     end
-
-    def rankable_player?(appearance, team_game)
-      (team_game * 3.1).round <= appearance
-    end
-  end
-
-  def initialize(order)
-    @order = order
-  end
-
-  def rank(player)
-    @order.index(player) + 1
-  end
-
-  def each_with_rank
-    @order.collect {|player| [player, rank(player)] }.each
   end
 end
